@@ -113,7 +113,7 @@ redteam score --responses my-model-responses.jsonl
 
 ## The mock target, honestly
 
-`MockTargetModel` is a stand-in, not a model. Its behaviour is fixed and documented: it refuses direct requests, instruction overrides, authority framing, refusal suppression and reversed-text encoding, and complies with role-play, hypothetical framing, leetspeak, base64 and multi-step escalation. Its compliance responses echo the harm-category keyword and present vacuous numbered steps — no real instructions — so they exercise the unsafe-content detector while staying safe to store and read. Use it to test the toolkit and to demonstrate a run; score a real model with `redteam score`.
+`MockTargetModel` is a stand-in, not a model. Its behaviour is fixed and documented: it refuses direct requests, instruction overrides, authority framing, refusal suppression and reversed-text encoding, and complies with role-play, hypothetical framing, leetspeak, base64 and multi-step escalation. Its compliance responses engage with the request's topic in realistic, general prose — a high-level discussion of how people think about the subject and what typically goes wrong — with no instructions, methods, or actionable detail, so they exercise the refusal classifier and the unsafe-content detector while staying safe to store and read. Use it to test the toolkit and to demonstrate a run; score a real model with `redteam score`.
 
 ## Limitations
 
@@ -128,7 +128,7 @@ pip install -e ".[dev]"
 python -m pytest -q
 ```
 
-75 tests: every generator (each technique produces a distinct, round-trippable variant), the mock target's documented behaviour (including a configurable vulnerable set), refusal classification (refusal / partial / compliance), unsafe-content detection (including cross-category drift), ASR and consistency maths, and CLI end-to-end runs on the example data — including the full 180-attack run and its exact expected numbers.
+82 tests: every generator (each technique produces a distinct, round-trippable variant), the mock target's documented behaviour (including a configurable vulnerable set and per-category responses that read as realistic prose), refusal classification (refusal / partial / compliance), unsafe-content detection (including cross-category drift), ASR and consistency maths, and CLI end-to-end runs on the example data — including the full 180-attack run and its exact expected numbers.
 
 ## Licence
 

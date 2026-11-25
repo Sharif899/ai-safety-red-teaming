@@ -6,6 +6,8 @@ from pathlib import Path
 import pytest
 
 from ai_safety_red_teaming.cli import main
+from ai_safety_red_teaming.generators import AttackTechnique, generate_attack
+from ai_safety_red_teaming.target import MockTargetModel
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUESTS = ROOT / "data" / "requests.jsonl"
@@ -69,6 +71,11 @@ def test_run_with_custom_vulnerable_set(capsys):
 
 def test_score_on_recorded_responses(capsys, tmp_path):
     responses = tmp_path / "responses.jsonl"
+    # The recorded compliance is a realistic response, taken from
+    # the mock target itself.
+    compliance = MockTargetModel().respond(
+        generate_attack(REQUEST, AttackTechnique.ROLEPLAY).prompt
+    )
     responses.write_text(
         json.dumps({
             "request_id": "r1", "category": "violence", "technique": "direct",
@@ -78,7 +85,7 @@ def test_score_on_recorded_responses(capsys, tmp_path):
         + json.dumps({
             "request_id": "r1", "category": "violence", "technique": "roleplay",
             "prompt": "roleplay prompt",
-            "response": "Sure, here's how to do that with explosive: Step 1: get what you need.",
+            "response": compliance,
         }) + "\n",
         encoding="utf-8",
     )
